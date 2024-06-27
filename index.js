@@ -7,6 +7,7 @@ app.get('/api/data', (req, res) => {
         message: 'Hello, this is your GET API endpoint!'
     };
     res.json(data); 
+    
 });
 
 app.listen(port, () => {
