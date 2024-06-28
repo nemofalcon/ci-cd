@@ -36,8 +36,8 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ SSH_HOST }}
-        username: ${{ SSH_USERNAME }}
-        key: ${{ SSH_KEY }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
         port: 7000
         script: |
           cd ~/node-github-demo
