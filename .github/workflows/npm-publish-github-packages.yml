@@ -23,22 +23,18 @@ jobs:
       env:
         CI: true
   deploy:
-  needs: [test]
-  runs-on: ubuntu-latest
-
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
     - name: SSH and deploy node app
-      uses: JimCronqvist/action-ssh@master
+      uses: appleboy/ssh-action@master
       with:
-        entryPoint: |
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 7000
+        script: |
           cd ~/ci-cd
           git pull origin master
-          npm install
+          npm install --production
           pm2 restart index
-        hosts: 'root@146.190.218.235'
-        privateKey: ${{ secrets.SSH_KEY }}
-        args: "-p 7000" 
-      
