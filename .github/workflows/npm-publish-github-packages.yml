@@ -31,10 +31,10 @@ jobs:
       with:
         hosts: 'root@146.190.218.235'
         key: ${{ secrets.SSH_KEY }}
+        debug: false
         port: 7000
         script: |
           cd ~/ci-cd
           git pull origin master
           npm install --production
           pm2 restart index
-         debug: false  
