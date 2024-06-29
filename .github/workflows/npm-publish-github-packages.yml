@@ -32,7 +32,6 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
-        port: 7000
         script: |
           cd ~/ci-cd
           git pull origin master
