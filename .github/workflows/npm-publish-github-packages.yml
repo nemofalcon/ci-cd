@@ -1,37 +1,19 @@
-name: Node Github CI
+deploy:
+  needs: [test]
+  runs-on: ubuntu-latest
 
-on:
-  push:
-    branches:
-      - master
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-jobs:
-  test:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install and test
+    - name: Debug SSH Connection
       run: |
-        npm install
-        npm test
+        echo "${{ secrets.SSH_KEY }}" > id_rsa
+        chmod 600 id_rsa
+        ssh -i id_rsa -o StrictHostKeyChecking=no -p 7000 ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "echo SSH connection successful"
       env:
-        CI: true
+        SSH_KEY: ${{ secrets.SSH_KEY }}
 
-  deploy:
-    needs: [test]
-    runs-on: ubuntu-latest
-
-    steps:
     - name: SSH and deploy node app
       uses: appleboy/ssh-action@master
       with:
@@ -42,5 +24,5 @@ jobs:
         script: |
           cd ~/ci-cd
           git pull origin master
-          npm install 
+          npm install
           pm2 restart index
