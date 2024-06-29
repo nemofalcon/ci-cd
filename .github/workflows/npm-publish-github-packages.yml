@@ -4,16 +4,12 @@ on:
   push:
     branches:
       - master
-
 jobs:
   test:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [20.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -26,39 +22,9 @@ jobs:
         npm test
       env:
         CI: true
-
-deploy:
-  needs: [test]
-  runs-on: ubuntu-latest
-
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Debug SSH Connection
-      run: |
-        echo "${{ secrets.SSH_KEY }}" > id_rsa
-        chmod 600 id_rsa
-        ssh -i id_rsa -o StrictHostKeyChecking=no -p 7000 ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "echo SSH connection successful"
-      env:
-        SSH_KEY: ${{ secrets.SSH_KEY }}
-
-    - name: SSH and deploy node app
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: 7000
-        script: |
-          cd ~/ci-cd
-          git pull origin master
-          npm install
-          pm2 restart index
-
+  deploy:
     needs: [test]
     runs-on: ubuntu-latest
-
     steps:
     - name: SSH and deploy node app
       uses: appleboy/ssh-action@master
@@ -70,5 +36,5 @@ deploy:
         script: |
           cd ~/ci-cd
           git pull origin master
-          npm install 
+          npm install --production
           pm2 restart index
