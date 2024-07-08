@@ -7,6 +7,7 @@ on:
 
 jobs:
   test:
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -14,27 +15,11 @@ jobs:
         node-version: [20]
 
     steps:
-    - name: Log initial DNS configuration
-      run: cat /etc/resolv.conf
-
-    - name: Configure DNS
-      run: |
-        echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
-        echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf > /dev/null
-
-    - name: Log DNS configuration after change
-      run: cat /etc/resolv.conf
-
-    - name: Verify DNS resolution
-      run: nslookup google.com
-
     - uses: actions/checkout@v2
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-
     - name: npm install and test
       run: |
         npm install
@@ -47,20 +32,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Log initial DNS configuration
-      run: cat /etc/resolv.conf
-
-    - name: Configure DNS
-      run: |
-        echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
-        echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf > /dev/null
-
-    - name: Log DNS configuration after change
-      run: cat /etc/resolv.conf
-
-    - name: Verify DNS resolution
-      run: nslookup google.com
-
     - name: SSH and deploy node app
       uses: appleboy/ssh-action@master
       with:
