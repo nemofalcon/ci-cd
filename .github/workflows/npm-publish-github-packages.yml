@@ -40,7 +40,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~/=ci-cd
+          cd /ci-cd
           git pull origin master
           npm install --production
           pm2 restart node-app
