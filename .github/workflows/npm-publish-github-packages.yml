@@ -30,7 +30,8 @@ jobs:
       run: |
         ip a
         ip route
-        ping -c 4 google.com
+        ping -c 4 8.8.8.8
+        ping -c 4 1.1.1.1
         nslookup google.com
 
     - name: Retry DNS Resolution
@@ -72,7 +73,8 @@ jobs:
       run: |
         ip a
         ip route
-        ping -c 4 google.com
+        ping -c 4 8.8.8.8
+        ping -c 4 1.1.1.1
         nslookup google.com
 
     - name: Retry DNS Resolution
