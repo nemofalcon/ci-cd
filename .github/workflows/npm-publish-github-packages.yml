@@ -19,24 +19,14 @@ jobs:
 
     - name: Configure DNS
       run: |
-        echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf > /dev/null
-        echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolv.conf > /dev/null
-        echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf > /dev/null
+        echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+        echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf > /dev/null
 
     - name: Log DNS configuration after change
       run: cat /etc/resolv.conf
 
-    - name: Network Diagnostics
-      run: |
-        ip a
-        ip route
-        ping -c 4 8.8.8.8
-        ping -c 4 1.1.1.1
-        nslookup google.com
-
-    - name: Retry DNS Resolution
-      run: |
-        for i in {1..5}; do nslookup google.com && break || sleep 2; done
+    - name: Verify DNS resolution
+      run: nslookup google.com
 
     - uses: actions/checkout@v2
 
@@ -62,24 +52,14 @@ jobs:
 
     - name: Configure DNS
       run: |
-        echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf > /dev/null
-        echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolv.conf > /dev/null
-        echo "nameserver 9.9.9.9" | sudo tee -a /etc/resolv.conf > /dev/null
+        echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+        echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf > /dev/null
 
     - name: Log DNS configuration after change
       run: cat /etc/resolv.conf
 
-    - name: Network Diagnostics
-      run: |
-        ip a
-        ip route
-        ping -c 4 8.8.8.8
-        ping -c 4 1.1.1.1
-        nslookup google.com
-
-    - name: Retry DNS Resolution
-      run: |
-        for i in {1..5}; do nslookup google.com && break || sleep 2; done
+    - name: Verify DNS resolution
+      run: nslookup google.com
 
     - name: SSH and deploy node app
       uses: appleboy/ssh-action@master
