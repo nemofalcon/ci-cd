@@ -1,30 +1,30 @@
-name: Node.js CD
+  name: Node.js CD
 
-on:
-  push:
-    branches: [ master ]
+  on:
+    push:
+      branches: [ master ]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  jobs:
+    build:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Deploy using ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: 22
-          script: |
-            echo "Changing to app directory..."
-            cd ci-cd || exit 1
-            echo "Pulling latest code from master branch..."
-            git pull origin master || exit 1
-            echo "Checking git status..."
-            git status
-            echo "Installing production dependencies..."
-            npm install --only=prod || exit 1
-            echo "Restarting application using PM2..."
-            pm2 restart ci-cd || exit 1
-            echo "Deployment complete."
+      steps:
+        - name: Deploy using ssh
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.PRIVATE_KEY }}
+            port: 22
+            script: |
+              echo "Changing to app directory..."
+              cd ci-cd || exit 1
+              echo "Pulling latest code from master branch..."
+              git pull origin master || exit 1
+              echo "Checking git status..."
+              git status
+              echo "Installing production dependencies..."
+              npm install --only=prod || exit 1
+              echo "Restarting application using PM2..."
+              pm2 restart ci-cd || exit 1
+              echo "Deployment complete."
