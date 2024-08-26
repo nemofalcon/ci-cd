@@ -10,29 +10,29 @@ jobs:
 
     steps:
       - name: Checkout code
-      uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
-    - name: Install SSH key
-      run: |
-        echo "${{ secrets.PRIVATE_KEY }}" 
-        echo "${{ secrets.HOST }}" 
-        echo "${{ secrets.USERNAME }}" 
-    - name: Deploy using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: 22
-        script: |
-          echo "Changing to app directory..."
-          cd node1 || exit 1
-          echo "Pulling latest code from master branch..."
-          git pull origin master || exit 1
-          echo "Checking git status..."
-          git status
-          echo "Installing production dependencies..."
-          npm install --only=prod || exit 1
-          echo "Restarting application using PM2..."
-          pm2 restart node1 || exit 1
-          echo "Deployment complete."
+      - name: Install SSH key
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo "Changing to app directory..."
+            cd node1 || exit 1
+            echo "Pulling latest code from master branch..."
+            git pull origin master || exit 1
+            echo "Checking git status..."
+            git status
+            echo "Installing production dependencies..."
+            npm install --only=prod || exit 1
+            echo "Restarting application using PM2..."
+            pm2 restart node1 || exit 1
+            echo "Deployment complete."
