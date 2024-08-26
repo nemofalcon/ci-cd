@@ -26,5 +26,5 @@
               echo "Installing production dependencies..."
               npm install --only=prod || exit 1
               echo "Restarting application using PM2..."
-              pm2 restart ci-cd || exit 1
+              pm2 start ci-cd ||pm2 restart ci-cd || exit 1
               echo "Deployment complete."
